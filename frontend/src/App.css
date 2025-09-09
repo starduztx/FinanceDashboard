@@ -1,0 +1,81 @@
+/* Root container */
+#root {
+  min-height: 100vh;
+  padding: 5rem;
+  background-color: #e0f7ff; /* ฟ้าอ่อนเต็มหน้าจอ */
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* จัดเนื้อหาชิดซ้าย */
+}
+
+/* Headings */
+h1 {
+  color: teal;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Card + Transaction Container */
+.card, .transaction-container {
+  width: 100%;          /* เต็มความกว้างของ container */
+  max-width: 800px;     /* กำหนดขนาดสูงสุดให้สวย */
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #ffffff; /* กล่องสีขาว */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Input & Select */
+.transaction-container input, 
+.transaction-container select {
+  padding: 5px;
+  margin-right: 5px;
+}
+
+/* Transaction list */
+.transaction-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.transaction-container li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.transaction-container li.income {
+  color: green;
+}
+
+.transaction-container li.expense {
+  color: red;
+}
+
+/* Buttons */
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005a9e;
+}
+
+/* Footer */
+footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  text-align: left;
+}
