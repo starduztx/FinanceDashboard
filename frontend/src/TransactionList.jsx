@@ -1,35 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 
 function TransactionList() {
   const [transactions, setTransactions] = useState([]);
-  const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
-  const [type, setType] = useState('income'); // income / expense
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [type, setType] = useState("income");
+
+  const API_URL = "http://localhost:5000/api/transactions";
+
+  useEffect(() => {
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => setTransactions(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const addTransaction = () => {
-    if (name.trim() !== '' && amount.trim() !== '' && !isNaN(amount)) {
-      setTransactions([
-        ...transactions,
-        { name, type, amount: parseFloat(amount) },
-      ]);
-      setName('');
-      setAmount('');
+    if (name.trim() && amount.trim() && !isNaN(amount)) {
+      const newTransaction = { name, type, amount: parseFloat(amount) };
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTransaction),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setTransactions([...transactions, data]);
+          setName("");
+          setAmount("");
+        })
+        .catch((err) => console.error(err));
     }
   };
 
-  const removeTransaction = (index) => {
-    setTransactions(transactions.filter((_, i) => i !== index));
+  const removeTransaction = (id) => {
+    fetch(`${API_URL}/${id}`, { method: "DELETE" })
+      .then((res) => res.json())
+      .then(() => {
+        setTransactions(transactions.filter((t) => t.id !== id));
+      })
+      .catch((err) => console.error(err));
   };
-
-  const totalIncome = transactions
-    .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalExpense = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const balance = totalIncome - totalExpense;
 
   return (
     <div className="transaction-container">
@@ -54,17 +66,13 @@ function TransactionList() {
       <button onClick={addTransaction}>เพิ่มธุรกรรม</button>
 
       <ul>
-        {transactions.map((t, i) => (
-          <li key={i} className={t.type}>
+        {transactions.map((t) => (
+          <li key={t.id} className={t.type}>
             {t.name}: {t.amount} ({t.type})
-            <button onClick={() => removeTransaction(i)}>ลบ</button>
+            <button onClick={() => removeTransaction(t.id)}>ลบ</button>
           </li>
         ))}
       </ul>
-
-      <p>รวมรายรับ: {totalIncome}</p>
-      <p>รวมรายจ่าย: {totalExpense}</p>
-      <p>ยอดคงเหลือ: {balance}</p>
     </div>
   );
 }
