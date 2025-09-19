@@ -10,30 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1️⃣ Checkout code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
+    # 2️⃣ Setup Node.js
+    - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
+        node-version: 18
 
+    # 3️⃣ Install frontend dependencies
     - name: Install frontend dependencies
       run: |
         cd frontend
         npm install
 
+    # 4️⃣ Run frontend tests
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm test -- --watchAll=false
+
+    # 5️⃣ Build frontend
     - name: Build frontend
       run: |
         cd frontend
         npm run build
 
-    - name: Run frontend tests
-      run: |
-        cd frontend
-        npm test
-
-    - name: Deploy to Render via Deploy Hook
+    # 6️⃣ Deploy to Render via Deploy Hook
+    - name: Deploy to Render
       if: github.ref == 'refs/heads/main'
       env:
         RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
